@@ -57,6 +57,57 @@ public class Main {
   String db(Map<String, Object> model) {
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS users(" +
+              "id INT NOT NULL PRIMARY KEY, " +
+              "username VARCHAR(20), " +
+              "password VARCHAR(20), " +
+              "email VARCHAR(30))");
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS project(" +
+              "id INT NOT NULL PRIMARY KEY, " +
+              "name VARCHAR(20) NOT NULL)");
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS user_project (" +
+              "id INT NOT NULL PRIMARY KEY, " +
+              "user_id INT NOT NULL, " +
+              "project_id INT NOT NULL, " +
+              "role ROLE, " +
+              "CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id), " +
+              "CONSTRAINT fk_project FOREIGN KEY(project_id) REFERENCES project(id))");
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS list(" +
+              "id INT NOT NULL PRIMARY KEY, " +
+              "project_id INT NOT NULL, " +
+              "name VARCHAR(20) NOT NULL, " +
+              "CONSTRAINT fk_project FOREIGN KEY(project_id) REFERENCES project(id))");
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS task(" +
+              "id INT NOT NULL PRIMARY KEY, " +
+              "list_id INT NOT NULL, " +
+              "name VARCHAR(20) NOT NULL, " +
+              "date_to_start DATE NOT NULL, " +
+              "date_to_finish DATE NOT NULL, " +
+              "priority INT NOT NULL, " +
+              "assigned_user_id INT, " +
+              "creator_id INT, " +
+              "description VARCHAR(10000), " +
+              "time_estimation INTERVAL, " +
+              "CONSTRAINT fk_list FOREIGN KEY(list_id) REFERENCES list(id), " +
+              "CONSTRAINT fk_assigned_user_id FOREIGN KEY(assigned_user_id) REFERENCES users(id), " +
+              "CONSTRAINT fk_creator_id FOREIGN KEY(assigned_user_id) REFERENCES users(id))");
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS message(" +
+              "id INT NOT NULL PRIMARY KEY, " +
+              "user_id INT NOT NULL, " +
+              "task_id INT NOT NULL, " +
+              "text VARCHAR(1000) NOT NULL, " +
+              "time TIME NOT NULL, " +
+              "CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id), " +
+              "CONSTRAINT fk_task FOREIGN KEY(task_id) REFERENCES task(id))");
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS action(" +
+              "id INT NOT NULL PRIMARY KEY, " +
+              "user_id INT NOT NULL, " +
+              "task_id INT NOT NULL, " +
+              "list_id INT NOT NULL, " +
+              "CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id), " +
+              "CONSTRAINT fk_list FOREIGN KEY(list_id) REFERENCES list(id), " +
+              "CONSTRAINT fk_task FOREIGN KEY(task_id) REFERENCES task(id))");
+
       stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
       stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
       ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
