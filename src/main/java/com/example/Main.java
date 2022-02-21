@@ -107,7 +107,18 @@ public class Main {
               "CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id), " +
               "CONSTRAINT fk_list FOREIGN KEY(list_id) REFERENCES list(id), " +
               "CONSTRAINT fk_task FOREIGN KEY(task_id) REFERENCES task(id))");
-
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS tag(" +
+              "id INT NOT NULL PRIMARY KEY, " +
+              "name VARCHAR(40))"
+              );
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS tag_task(" +
+              "id INT NOT NULL PRIMARY KEY, " +
+              "tag_id INT NOT NULL, " +
+              "task_id INT NOT NULL, " +
+              "CONSTRAINT fk_tag FOREIGN KEY(tag_id) REFERENCES tag(id), " +
+              "CONSTRAINT fk_task FOREIGN KEY(task_id) REFERENCES task(id))"
+      );
+      
       stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
       stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
       ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
