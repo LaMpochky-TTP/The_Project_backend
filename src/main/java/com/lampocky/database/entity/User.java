@@ -11,17 +11,25 @@ public class User {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "username", length = 20)
+    @Column(name = "username", length = 20, unique = true)
     private String username;
 
-    @Column(name = "password", length = 20)
+    @Column(name = "password", length = 100)
     private String password;
 
-    @Column(name = "email", length = 30)
+    @Column(name = "email", length = 30, unique = true)
     private String email;
 
     @OneToMany(mappedBy = "user")
     private List<UserProject> projects;
+
+    public User(){}
+
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
 
     public Integer getId() {
         return id;

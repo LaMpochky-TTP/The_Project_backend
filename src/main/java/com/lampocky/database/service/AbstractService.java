@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class AbstractService<T>{
-    private JpaRepository<T, Integer> repository;
+    protected JpaRepository<T, Integer> repository;
 
     public AbstractService(JpaRepository<T, Integer> repository) {
         this.repository = repository;
