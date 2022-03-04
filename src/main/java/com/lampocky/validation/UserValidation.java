@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-public class UserRegistrationRequestValidation {
+public class UserValidation {
     private List<String> errors = new ArrayList<>();
     private Pattern usernamePattern = Pattern.compile("[a-zA-Z0-9_\\-]*");
     private Pattern passwordNumbersPattern = Pattern.compile(".*[0-9].*");
@@ -18,7 +18,7 @@ public class UserRegistrationRequestValidation {
     private Pattern emailPattern = Pattern.compile("\\S+@\\S+\\.\\S+");
     private UserService userService;
 
-    public UserRegistrationRequestValidation(UserService userService) {
+    public UserValidation(UserService userService) {
         this.userService = userService;
     }
 
@@ -77,11 +77,19 @@ public class UserRegistrationRequestValidation {
         }
     }
 
-    public boolean validateRequest(RegisterRequestDto request){
+    public boolean validate(RegisterRequestDto request){
         errors.clear();
         validateUsername(request.getUsername());
         validatePassword(request.getPassword());
         validateEmail(request.getEmail());
+        return errors.isEmpty();
+    }
+
+    public boolean validate(User user) {
+        errors.clear();
+        validateUsername(user.getUsername());
+        validatePassword(user.getPassword());
+        validateEmail(user.getEmail());
         return errors.isEmpty();
     }
 

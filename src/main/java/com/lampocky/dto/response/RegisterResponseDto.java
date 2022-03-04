@@ -22,7 +22,7 @@ public class RegisterResponseDto {
     }
 
     public static RegisterResponseDto success(String username, String email, String token){
-        return new RegisterResponseDto(username, email, token, true, null);
+        return new RegisterResponseDto(username, email, token, true, new ArrayList<>());
     }
 
     public static RegisterResponseDto fail(String username, String email, List<String> errors){

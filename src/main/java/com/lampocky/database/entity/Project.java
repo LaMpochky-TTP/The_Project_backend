@@ -1,6 +1,7 @@
 package com.lampocky.database.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "project", schema = "lampochky")
@@ -49,5 +50,23 @@ public class Project {
 
     public void setUsers(java.util.List<UserProject> users) {
         this.users = users;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return Objects.equals(id, project.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Project(" + id + ')';
     }
 }

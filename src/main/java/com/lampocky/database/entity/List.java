@@ -1,6 +1,7 @@
 package com.lampocky.database.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "list", schema = "lampochky")
@@ -10,7 +11,7 @@ public class List {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 20)
     private String name;
 
     @ManyToOne(cascade = { CascadeType.ALL })
@@ -50,5 +51,23 @@ public class List {
 
     public void setTasks(java.util.List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        List list = (List) o;
+        return Objects.equals(id, list.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "List(" + id + ')';
     }
 }

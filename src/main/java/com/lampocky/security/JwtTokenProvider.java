@@ -4,22 +4,24 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
+    private final Logger log = LogManager.getLogger(JwtTokenProvider.class);
     private final String bearerTokenPrefix = "Bearer_";
     private final String secret;
     private final Long tokenExpiredInMillis;
@@ -35,14 +37,20 @@ public class JwtTokenProvider {
     }
 
     public String createToken(String email){
-        Claims claims = Jwts.claims().setSubject(email);
         Date now = new Date();
         Date expiration = new Date(now.getTime() + tokenExpiredInMillis);
 
+        return createToken(email, now, expiration);
+    }
+
+    public String createToken(String email, Date from, Date to) {
+        Claims claims = Jwts.claims().setSubject(email);
+
         return Jwts.builder()
                 .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(expiration)
+                .setIssuedAt(from)
+                .setNotBefore(from)
+                .setExpiration(to)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
@@ -50,15 +58,22 @@ public class JwtTokenProvider {
     public String resolveToken(HttpServletRequest request){
         String bearerToken = request.getHeader("Authorization");
         if(bearerToken != null && bearerToken.startsWith(bearerTokenPrefix)){
+            log.debug("Token resolving success");
             return bearerToken.substring(bearerTokenPrefix.length());
         } else {
+            log.debug("Token resolving fail");
             return null;
         }
     }
 
-    public Authentication getAuthentication(String token){
-        UserDetails userDetails = service.loadUserByUsername(getEmail(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    public Authentication getAuthentication(String token) throws UsernameNotFoundException {
+        try{
+            UserDetails userDetails = service.loadUserByUsername(getEmail(token));
+            return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        } catch (UsernameNotFoundException ex) {
+            log.error(ex.getMessage());
+            return null;
+        }
     }
 
     public String getEmail(String token){
@@ -70,9 +85,8 @@ public class JwtTokenProvider {
             Date expiration = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getExpiration();
             return !expiration.before(new Date());
         } catch (JwtException | IllegalArgumentException ex) {
-            ex.printStackTrace();
+            log.warn(ex.getMessage());
             return false;
-//            throw new JwtAuthenticationException("JWT token is expired or invalid");
         }
     }
 }

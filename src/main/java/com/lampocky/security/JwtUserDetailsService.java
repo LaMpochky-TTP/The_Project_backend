@@ -2,6 +2,8 @@ package com.lampocky.security;
 
 import com.lampocky.database.entity.User;
 import com.lampocky.database.service.UserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,6 +14,7 @@ import java.util.Optional;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
+    private final Logger log = LogManager.getLogger(JwtUserDetailsService.class);
     private UserService userService;
 
     @Autowired
@@ -20,12 +23,12 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userService.findByEmail(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<User> user = userService.findByEmail(email);
         if(user.isPresent()) {
             return new UserSecurity(user.get());
         } else {
-            throw new UsernameNotFoundException("No user " + username + " found");
+            throw new UsernameNotFoundException("No user with email " + email + " found");
         }
     }
 }

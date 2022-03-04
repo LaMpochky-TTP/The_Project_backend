@@ -19,7 +19,7 @@ public class LoginResponseDto {
     }
 
     public static LoginResponseDto success(String username, String email, String token){
-        return new LoginResponseDto(username, token, email, true, null);
+        return new LoginResponseDto(username, email, token, true, null);
     }
 
     public static LoginResponseDto fail(String email, String error){
