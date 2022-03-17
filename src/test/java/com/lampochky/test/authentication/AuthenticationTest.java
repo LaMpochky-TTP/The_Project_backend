@@ -3,10 +3,10 @@ package com.lampochky.test.authentication;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.lampocky.Application;
-import com.lampocky.database.entity.User;
-import com.lampocky.database.service.UserService;
-import com.lampocky.security.JwtTokenProvider;
+import com.lampochky.Application;
+import com.lampochky.database.entity.User;
+import com.lampochky.database.service.UserService;
+import com.lampochky.security.JwtTokenProvider;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -205,7 +205,7 @@ public class AuthenticationTest {
         String token = getNullableText(mapper.readTree(response).at("/token"));
         Assertions.assertNotNull(token);
         Assertions.assertTrue(provider.isValid(token));
-        Assertions.assertEquals("test_email@gmail.com", provider.getEmail(token));
+        Assertions.assertEquals(email, provider.getEmail(token));
 
         userService.delete(userService.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("No user found")));
@@ -236,7 +236,7 @@ public class AuthenticationTest {
         String token = getNullableText(mapper.readTree(response).at("/token"));
         Assertions.assertNotNull(token);
         Assertions.assertTrue(provider.isValid(token));
-        Assertions.assertEquals("test_email@gmail.com", provider.getEmail(token));
+        Assertions.assertEquals(email, provider.getEmail(token));
 
         userService.delete(userService.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("No user found")));
@@ -277,7 +277,7 @@ public class AuthenticationTest {
         return Stream.of(
                 Arguments.of(
                     mapper.createObjectNode()
-                        .put("username", "new_user")
+                        .put("username", "some_name")
                         .put("email", "wrong_email")
                         .put("password", "Pass1"),
                     1
@@ -292,7 +292,7 @@ public class AuthenticationTest {
                 Arguments.of(
                     mapper.createObjectNode()
                         .putNull("username")
-                        .put("email", "new_email@gmail.com")
+                        .put("email", "some_email@gmail.com")
                         .put("password", "password"),
                     3
                 )

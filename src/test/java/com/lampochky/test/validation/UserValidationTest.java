@@ -1,10 +1,11 @@
 package com.lampochky.test.validation;
 
-import com.lampocky.Application;
-import com.lampocky.database.entity.User;
-import com.lampocky.database.service.UserService;
-import com.lampocky.dto.request.RegisterRequestDto;
-import com.lampocky.validation.UserValidation;
+import com.lampochky.Application;
+import com.lampochky.database.entity.User;
+import com.lampochky.database.service.UserService;
+import com.lampochky.dto.request.auth.RegisterRequestDto;
+import com.lampochky.validation.Error;
+import com.lampochky.validation.UserValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -22,11 +23,11 @@ import java.util.stream.Stream;
 @TestPropertySource(locations = "classpath:application-test.properties")
 @SpringBootTest(classes = Application.class)
 public class UserValidationTest {
-    private final UserValidation userValidation;
+    private final UserValidator userValidation;
 
     @Autowired
     public UserValidationTest(UserService userService){
-        userValidation = new UserValidation(userService);
+        userValidation = new UserValidator(userService);
     }
 
     @BeforeAll
@@ -54,13 +55,13 @@ public class UserValidationTest {
         );
     }
 
-    private void check(User user, String error) {
+    private void check(User user, Error error) {
         Assertions.assertFalse(userValidation.validate(user));
         Assertions.assertEquals(1, userValidation.getErrors().size());
         Assertions.assertTrue(userValidation.getErrors().get(0).equals(error));
     }
 
-    private void check(RegisterRequestDto request, String error){
+    private void check(RegisterRequestDto request, Error error){
         Assertions.assertFalse(userValidation.validate(request));
         Assertions.assertEquals(1, userValidation.getErrors().size());
         Assertions.assertTrue(userValidation.getErrors().get(0).equals(error));
@@ -90,23 +91,23 @@ public class UserValidationTest {
         return Stream.of(
                 Arguments.of(
                         new User(null, "Correct0pwd", "corect_email@gmail.com"),
-                        "username is empty"
+                        Error.USERNAME_EMPTY
                 ),
                 Arguments.of(
                         new User("", "Correct0pwd", "corect_email@gmail.com"),
-                        "username is empty"
+                        Error.USERNAME_EMPTY
                 ),
                 Arguments.of(
                         new User("uv_name_1", "Correct0pwd", "corect_email@gmail.com"),
-                        "username is already in use"
+                        Error.USERNAME_IN_USE
                 ),
                 Arguments.of(
                         new User("Too_long_username_without_illegal_characters", "Correct0pwd", "corect_email@gmail.com"),
-                        "username must not be longer 20 characters"
+                        Error.USERNAME_TOO_LONG
                 ),
                 Arguments.of(
                         new User("illegal character$", "Correct0pwd", "corect_email@gmail.com"),
-                        "username must contain latin letters, digits, _, - only"
+                        Error.USERNAME_ILLEGAL_CHARACTERS
                 )
         );
     }
@@ -114,7 +115,7 @@ public class UserValidationTest {
     @ParameterizedTest
     @MethodSource
     @DisplayName("Wrong user's username")
-    public void wrongUserUsername_fail(User user, String error) {
+    public void wrongUserUsername_fail(User user, Error error) {
         check(user, error);
     }
 
@@ -129,7 +130,7 @@ public class UserValidationTest {
     @ParameterizedTest
     @MethodSource
     @DisplayName("Wrong username in request")
-    public void wrongRequestUsername_fail(RegisterRequestDto request, String error) {
+    public void wrongRequestUsername_fail(RegisterRequestDto request, Error error) {
         check(request, error);
     }
 
@@ -137,35 +138,35 @@ public class UserValidationTest {
         return Stream.of(
                 Arguments.of(
                         new User("Correct_name", "Correct0pwd", null),
-                        "email is empty"
+                        Error.EMAIL_EMPTY
                 ),
                 Arguments.of(
                         new User("Correct_name", "Correct0pwd", ""),
-                        "email is empty"
+                        Error.EMAIL_EMPTY
                 ),
                 Arguments.of(
                         new User("Correct_name", "Correct0pwd", "uv_email_1@gmail.com"),
-                        "email is already in use"
+                        Error.EMAIL_IN_USE
                 ),
                 Arguments.of(
                         new User("Correct_name", "Correct0pwd", "incorrect_email"),
-                        "email is incorrect"
+                        Error.EMAIL_ILLEGAL
                 ),
                 Arguments.of(
                         new User("Correct_name", "Correct0pwd", "no_host@"),
-                        "email is incorrect"
+                        Error.EMAIL_ILLEGAL
                 ),
                 Arguments.of(
                         new User("Correct_name", "Correct0pwd", "illegal_host@host"),
-                        "email is incorrect"
+                        Error.EMAIL_ILLEGAL
                 ),
                 Arguments.of(
                         new User("Correct_name", "Correct0pwd", "illegal symbols @ host.ua"),
-                        "email is incorrect"
+                        Error.EMAIL_ILLEGAL
                 ),
                 Arguments.of(
                         new User("Correct_name", "Correct0pwd", "@no_name.com"),
-                        "email is incorrect"
+                        Error.EMAIL_ILLEGAL
                 )
         );
     }
@@ -173,7 +174,7 @@ public class UserValidationTest {
     @ParameterizedTest
     @MethodSource
     @DisplayName("Wrong user's email")
-    public void wrongUserEmail_fail(User user, String error) {
+    public void wrongUserEmail_fail(User user, Error error) {
         check(user, error);
     }
 
@@ -188,27 +189,31 @@ public class UserValidationTest {
     @ParameterizedTest
     @MethodSource
     @DisplayName("Wrong email in request")
-    public void wrongRequestEmail_fail(RegisterRequestDto request, String error) {
+    public void wrongRequestEmail_fail(RegisterRequestDto request, Error error) {
         check(request, error);
     }
 
     public static Stream<Arguments> wrongUserPassword_fail(){
         return Stream.of(
                 Arguments.of(
+                        new User("correct_name", "Sho1", "correct@gmail.com"),
+                        Error.PASSWORD_TOO_SHORT
+                ),
+                Arguments.of(
                         new User("correct_name", "Too long password 1 with all required characters", "correct@gmail.com"),
-                        "password must not be longer then 20 characters"
+                        Error.PASSWORD_TOO_LONG
                 ),
                 Arguments.of(
                         new User("correct_name", "no uppercase 1", "correct@gmail.com"),
-                        "password must contain uppercased latin letters"
+                        Error.PASSWORD_NO_UPPERCASE
                 ),
                 Arguments.of(
                         new User("correct_name", "NO LOWERCASE 1", "correct@gmail.com"),
-                        "password must contain lowercased latin letters"
+                        Error.PASSWORD_NO_LOWERCASE
                 ),
                 Arguments.of(
                         new User("correct_name", "No digits", "correct@gmail.com"),
-                        "password must contain digits"
+                        Error.PASSWORD_NO_DIGITS
                 )
         );
     }
@@ -216,7 +221,7 @@ public class UserValidationTest {
     @ParameterizedTest
     @MethodSource
     @DisplayName("Wrong user's password")
-    public void wrongUserPassword_fail(User user, String error) {
+    public void wrongUserPassword_fail(User user, Error error) {
         check(user, error);
     }
 
@@ -231,7 +236,7 @@ public class UserValidationTest {
     @ParameterizedTest
     @MethodSource
     @DisplayName("Wrong password in request")
-    public void wrongRequestPassword_fail(RegisterRequestDto request, String error) {
+    public void wrongRequestPassword_fail(RegisterRequestDto request, Error error) {
         check(request, error);
     }
 
@@ -240,28 +245,28 @@ public class UserValidationTest {
                 Arguments.of(
                         new User("correct_name", null, "correct@gmail.com"),
                         Arrays.asList(
-                                "password must be longer then 5 characters",
-                                "password must contain digits",
-                                "password must contain uppercased latin letters",
-                                "password must contain lowercased latin letters"
+                                Error.PASSWORD_TOO_SHORT,
+                                Error.PASSWORD_NO_DIGITS,
+                                Error.PASSWORD_NO_UPPERCASE,
+                                Error.PASSWORD_NO_LOWERCASE
                         )
                 ),
                 Arguments.of(
                         new User("illegal character$", "Correct1", "no_host@"),
                         Arrays.asList(
-                                "username must contain latin letters, digits, _, - only",
-                                "email is incorrect"
+                                Error.USERNAME_ILLEGAL_CHARACTERS,
+                                Error.EMAIL_ILLEGAL
                         )
                 ),
                 Arguments.of(
                         new User(null, "", null),
                         Arrays.asList(
-                                "password must be longer then 5 characters",
-                                "password must contain digits",
-                                "password must contain uppercased latin letters",
-                                "password must contain lowercased latin letters",
-                                "email is empty",
-                                "username is empty"
+                                Error.PASSWORD_TOO_SHORT,
+                                Error.PASSWORD_NO_DIGITS,
+                                Error.PASSWORD_NO_UPPERCASE,
+                                Error.PASSWORD_NO_LOWERCASE,
+                                Error.EMAIL_EMPTY,
+                                Error.USERNAME_EMPTY
                         )
                 )
         );
