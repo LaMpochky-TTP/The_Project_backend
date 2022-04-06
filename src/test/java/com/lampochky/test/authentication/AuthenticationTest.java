@@ -73,7 +73,7 @@ public class AuthenticationTest {
                 .andExpect(jsonPath("$.email", is("test_email@gmail.com")))
                 .andExpect(jsonPath("$.username", is("test_name")))
                 .andExpect(jsonPath("$.success", is(true)))
-                .andExpect(jsonPath("$.error", nullValue()))
+                .andExpect(jsonPath("$.errors", emptyIterable()))
                 .andReturn().getResponse().getContentAsString();
 
         String token = getNullableText(mapper.readTree(response).at("/token"));
@@ -98,7 +98,7 @@ public class AuthenticationTest {
                 .andExpect(jsonPath("$.email", is("test_email@gmail.com")))
                 .andExpect(jsonPath("$.username", is("test_name")))
                 .andExpect(jsonPath("$.success", is(true)))
-                .andExpect(jsonPath("$.error", nullValue()))
+                .andExpect(jsonPath("$.errors", emptyIterable()))
                 .andReturn().getResponse().getContentAsString();
 
         String token = getNullableText(mapper.readTree(response).at("/token"));
@@ -123,7 +123,7 @@ public class AuthenticationTest {
                 .andExpect(jsonPath("$.username", nullValue()))
                 .andExpect(jsonPath("$.token", nullValue()))
                 .andExpect(jsonPath("$.success", is(false)))
-                .andExpect(jsonPath("$.error", not(blankOrNullString())));
+                .andExpect(jsonPath("$.errors", not(emptyIterable())));
     }
 
     @Test
@@ -141,7 +141,7 @@ public class AuthenticationTest {
                 .andExpect(jsonPath("$.username", nullValue()))
                 .andExpect(jsonPath("$.token", nullValue()))
                 .andExpect(jsonPath("$.success", is(false)))
-                .andExpect(jsonPath("$.error", not(blankOrNullString())));
+                .andExpect(jsonPath("$.errors", not(emptyIterable())));
     }
 
     @Test
@@ -161,7 +161,7 @@ public class AuthenticationTest {
                 .andExpect(jsonPath("$.username", nullValue()))
                 .andExpect(jsonPath("$.token", nullValue()))
                 .andExpect(jsonPath("$.success", is(false)))
-                .andExpect(jsonPath("$.error", not(blankOrNullString())));
+                .andExpect(jsonPath("$.errors", not(emptyIterable())));
     }
 
     @Test
@@ -179,7 +179,7 @@ public class AuthenticationTest {
                 .andExpect(jsonPath("$.username", nullValue()))
                 .andExpect(jsonPath("$.token", nullValue()))
                 .andExpect(jsonPath("$.success", is(false)))
-                .andExpect(jsonPath("$.error", not(blankOrNullString())));
+                .andExpect(jsonPath("$.errors", not(emptyIterable())));
     }
 
     @Test
