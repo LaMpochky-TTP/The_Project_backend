@@ -62,7 +62,12 @@ public class ProjectController extends AbstractController{
 
     @GetMapping("/all")
     public ResponseEntity<GetAllProjectsResponseDto> getAll(@AuthenticationPrincipal UserSecurity authUser){
-        User user = authUser.getUser();
+        /** required for lazy loading */
+        User user = userService.findById(authUser.getUser().getId()).orElseGet(() -> {
+            log.error("Can not find authenticated user {}", authUser.getUser());
+            return null;
+        });
+
         return ResponseEntity.ok(GetAllProjectsResponseDto.success(user.getProjects()));
     }
 
