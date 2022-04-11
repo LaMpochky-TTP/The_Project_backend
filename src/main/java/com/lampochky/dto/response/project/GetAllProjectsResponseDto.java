@@ -1,6 +1,6 @@
 package com.lampochky.dto.response.project;
 
-import com.lampochky.database.entity.Project;
+import com.lampochky.database.entity.UserProject;
 import com.lampochky.dto.response.DtoBuilder;
 import com.lampochky.dto.response.ResponseDto;
 import com.lampochky.validation.Error;
@@ -17,9 +17,10 @@ public class GetAllProjectsResponseDto extends ResponseDto {
         this.projects = projects;
     }
 
-    public static GetAllProjectsResponseDto success(List<Project> projects){
+    public static GetAllProjectsResponseDto success(List<UserProject> userProjects){
         return new GetAllProjectsResponseDto(Collections.emptyList(),
-                projects.stream().map(DtoBuilder::buildShortProjectDto).collect(Collectors.toList()));
+                userProjects.stream().map(up -> DtoBuilder.buildShortProjectDto(up.getProject(), up.getRole()))
+                        .collect(Collectors.toList()));
     }
 
     public static GetAllProjectsResponseDto fail(Error error){

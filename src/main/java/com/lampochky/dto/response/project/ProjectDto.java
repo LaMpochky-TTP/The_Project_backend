@@ -1,6 +1,7 @@
 package com.lampochky.dto.response.project;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.lampochky.database.entity.UserRole;
 import com.lampochky.dto.response.list.ListDto;
 import com.lampochky.dto.response.tag.TagDto;
 import com.lampochky.dto.response.user.UserDto;
@@ -14,6 +15,7 @@ public class ProjectDto {
     private List<ListDto> lists;
     private List<UserDto> users;
     private List<TagDto> tags;
+    private UserRole role;
 
     public Integer getId() {
         return id;
@@ -53,5 +55,13 @@ public class ProjectDto {
 
     public void setTags(List<TagDto> tags) {
         this.tags = tags;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 }

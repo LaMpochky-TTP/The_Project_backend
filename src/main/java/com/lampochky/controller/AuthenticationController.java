@@ -92,7 +92,7 @@ public class AuthenticationController {
     // TODO remove this endpoint
     @GetMapping("/login-test")
     public ResponseEntity<UserDto> loginTest(@AuthenticationPrincipal UserSecurity userSecurity){
-        return ResponseEntity.ok(DtoBuilder.buildUserDto(userSecurity.getUser()));
+        return ResponseEntity.ok(DtoBuilder.buildUserDto(userSecurity.getUser(), null));
     }
 
     @PostMapping("/test")
@@ -102,6 +102,6 @@ public class AuthenticationController {
             String field = it.next();
             System.out.println(field + " = " + node.get(field));
         }
-        return ResponseEntity.ok(DtoBuilder.buildUserDto(userSecurity.getUser()));
+        return ResponseEntity.ok(DtoBuilder.buildUserDto(userSecurity.getUser(), null));
     }
 }

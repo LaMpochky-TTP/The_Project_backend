@@ -79,14 +79,12 @@ public class ProjectCrudTest extends AbstractCrudTest {
         final String userEmail = "email_1@gmail.com";
         User user = getUserByEmail(userEmail);
         Project project = getProjectById(id);
-        UserRole role = checkIfUserRoleGreaterOrEquals(user, project, UserRole.GUEST);
 
         mvc.perform(get("/data/project/" + id)
                     .with( user(new UserSecurity(user)) ))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success", is(true)))
                 .andExpect(jsonPath("$.errors", emptyIterable()))
-                .andExpect(jsonPath("$.role", is(role.toString()) ))
                 .andExpect(jsonPath("$.project.id", is(id)))
                 .andExpect(jsonPath("$.project.name", is(project.getName())))
                 .andExpect(jsonPath("$.project.lists[*].id",
@@ -111,7 +109,6 @@ public class ProjectCrudTest extends AbstractCrudTest {
                 .andExpect(jsonPath("$.success", is(false)))
                 .andExpect(jsonPath("$.errors[*].errName", hasItem(Error.PERMISSIONS_NOT_GRANTED.name())))
                 .andExpect(jsonPath("$.errors", iterableWithSize(1)))
-                .andExpect(jsonPath("$.role", nullValue()))
                 .andExpect(jsonPath("$.project", nullValue()));
     }
 
@@ -130,7 +127,6 @@ public class ProjectCrudTest extends AbstractCrudTest {
                 .andExpect(jsonPath("$.success", is(false)))
                 .andExpect(jsonPath("$.errors[*].errName",
                         containsInAnyOrder(Error.PROJECT_NOT_FOUND.name()) ))
-                .andExpect(jsonPath("$.role", nullValue()))
                 .andExpect(jsonPath("$.project", nullValue()));
     }
 

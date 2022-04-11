@@ -2,6 +2,7 @@ package com.lampochky.dto.response.project;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.lampochky.database.entity.Project;
+import com.lampochky.database.entity.UserRole;
 import com.lampochky.dto.response.DtoBuilder;
 import com.lampochky.dto.response.ResponseDto;
 import com.lampochky.validation.Error;
@@ -18,8 +19,8 @@ public class ProjectResponseDto extends ResponseDto {
         this.project = project;
     }
 
-    public static ProjectResponseDto success(Project project) {
-        return new ProjectResponseDto(Collections.emptyList(), DtoBuilder.buildShortProjectDto(project));
+    public static ProjectResponseDto success(Project project, UserRole role) {
+        return new ProjectResponseDto(Collections.emptyList(), DtoBuilder.buildShortProjectDto(project, role));
     }
 
     public static ProjectResponseDto fail(Error error){

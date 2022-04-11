@@ -12,31 +12,34 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 public class DtoBuilder {
-    private static ProjectDto buildProjectDto_base(Project project) {
+    private static ProjectDto buildProjectDto_base(Project project, UserRole role) {
         ProjectDto dto = new ProjectDto();
         dto.setId(project.getId());
         dto.setName(project.getName());
+        dto.setRole(role);
         return dto;
     }
 
-    public static ProjectDto buildShortProjectDto(Project project){
+    public static ProjectDto buildShortProjectDto(Project project, UserRole role){
         if(project == null) {
             return null;
         }
-        ProjectDto dto = buildProjectDto_base(project);
+        ProjectDto dto = buildProjectDto_base(project, role);
         dto.setLists(Collections.emptyList());
         dto.setUsers(Collections.emptyList());
         dto.setTags(Collections.emptyList());
         return dto;
     }
 
-    public static ProjectDto buildFullProjectDto(Project project){
+    public static ProjectDto buildFullProjectDto(Project project, UserRole role){
         if(project == null) {
             return null;
         }
-        ProjectDto dto = buildProjectDto_base(project);
+        ProjectDto dto = buildProjectDto_base(project, role);
         dto.setLists(project.getLists().stream().map(DtoBuilder::buildFullListDto).collect(Collectors.toList()));
-        dto.setUsers(project.getUsers().stream().map(up -> buildUserDto(up.getUser())).collect(Collectors.toList()));
+        dto.setUsers(project.getUsers().stream()
+                .map(up -> buildUserDto(up.getUser(), up.getRole()))
+                .collect(Collectors.toList()));
         dto.setTags(project.getTags().stream().map(DtoBuilder::buildTagDto).collect(Collectors.toList()));
         return dto;
     }
@@ -97,8 +100,8 @@ public class DtoBuilder {
         dto.setPriority(task.getPriority());
         dto.setDescription(task.getDescription());
         dto.setListId(task.getList().getId());
-        dto.setAssignedUser(buildUserDto(task.getAssignedUser()));
-        dto.setCreator(buildUserDto(task.getCreator()));
+        dto.setAssignedUser(buildUserDto(task.getAssignedUser(), null));
+        dto.setCreator(buildUserDto(task.getCreator(), null));
         return dto;
     }
 
@@ -123,7 +126,7 @@ public class DtoBuilder {
     }
 
 
-    public static UserDto buildUserDto(User user){
+    public static UserDto buildUserDto(User user, UserRole role){
         if(user == null) {
             return null;
         }
@@ -131,6 +134,7 @@ public class DtoBuilder {
         dto.setId(user.getId());
         dto.setUsername(user.getUsername());
         dto.setEmail(user.getEmail());
+        dto.setRole(role);
         return dto;
     }
 
@@ -153,7 +157,7 @@ public class DtoBuilder {
         }
         MessageDto dto = new MessageDto();
         dto.setId(message.getId());
-        dto.setUser(buildUserDto(message.getUser()));
+        dto.setUser(buildUserDto(message.getUser(), null));
         dto.setText(message.getText());
         dto.setDateTime(message.getDateTime());
         dto.setTaskId(message.getTask().getId());

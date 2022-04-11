@@ -12,28 +12,25 @@ import java.util.List;
 public class GetProjectByIdResponseDto extends ResponseDto {
     private Integer id;
     private ProjectDto project;
-    private UserRole role;
 
-    private GetProjectByIdResponseDto(List<Error> errors, Integer id,
-                                      ProjectDto project, UserRole role) {
+    private GetProjectByIdResponseDto(List<Error> errors, Integer id, ProjectDto project) {
         super(errors);
         this.id = id;
         this.project = project;
-        this.role = role;
     }
 
     public static GetProjectByIdResponseDto success(Project project, UserRole role){
         return new GetProjectByIdResponseDto(Collections.emptyList(),
-                project.getId(), DtoBuilder.buildFullProjectDto(project), role);
+                project.getId(), DtoBuilder.buildFullProjectDto(project, role));
     }
 
     public static GetProjectByIdResponseDto fail(Integer id, Error error){
         return new GetProjectByIdResponseDto(Collections.singletonList(error),
-                id, null, null);
+                id, null);
     }
 
     public static GetProjectByIdResponseDto fail(Integer id, List<Error> errors){
-        return new GetProjectByIdResponseDto(errors, id, null, null);
+        return new GetProjectByIdResponseDto(errors, id, null);
     }
 
     public Integer getId() {
@@ -50,13 +47,5 @@ public class GetProjectByIdResponseDto extends ResponseDto {
 
     public void setProject(ProjectDto project) {
         this.project = project;
-    }
-
-    public UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
     }
 }

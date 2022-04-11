@@ -1,9 +1,12 @@
 package com.lampochky.dto.response.user;
 
+import com.lampochky.database.entity.UserRole;
+
 public class UserDto {
     private Integer id;
     private String username;
     private String email;
+    private UserRole role;
 
     public Integer getId() {
         return id;
@@ -27,5 +30,13 @@ public class UserDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 }

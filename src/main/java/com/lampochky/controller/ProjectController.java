@@ -63,8 +63,7 @@ public class ProjectController extends AbstractController{
     @GetMapping("/all")
     public ResponseEntity<GetAllProjectsResponseDto> getAll(@AuthenticationPrincipal UserSecurity authUser){
         User user = authUser.getUser();
-        List<Project> projects = projectService.findAllByUser(user);
-        return ResponseEntity.ok(GetAllProjectsResponseDto.success(projects));
+        return ResponseEntity.ok(GetAllProjectsResponseDto.success(user.getProjects()));
     }
 
     @PostMapping
@@ -76,7 +75,7 @@ public class ProjectController extends AbstractController{
             project = projectService.save(project);
             UserProject userProject = new UserProject(null, UserRole.ADMIN, true, user, project);
             userProjectService.save(userProject);
-            return ResponseEntity.ok(ProjectResponseDto.success(project));
+            return ResponseEntity.ok(ProjectResponseDto.success(project, UserRole.ADMIN));
         } else {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ProjectResponseDto
                     .fail(projectValidator.getErrors()));
@@ -141,7 +140,7 @@ public class ProjectController extends AbstractController{
                     .fail(Error.PERMISSIONS_NOT_GRANTED));
         } else if(projectValidator.validate(project)){
             Project savedProject = projectService.save(project);
-            return ResponseEntity.ok(ProjectResponseDto.success(savedProject));
+            return ResponseEntity.ok(ProjectResponseDto.success(savedProject, role));
         } else {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ProjectResponseDto
                     .fail(projectValidator.getErrors()));
@@ -201,6 +200,6 @@ public class ProjectController extends AbstractController{
                     .fail(Error.PERMISSIONS_NOT_GRANTED));
         }
         projectService.delete(project);
-        return ResponseEntity.ok(ProjectResponseDto.success(project));
+        return ResponseEntity.ok(ProjectResponseDto.success(project, relation.getRole()));
     }
 }
