@@ -21,7 +21,7 @@ public class GetProjectByIdResponseDto extends ResponseDto {
 
     public static GetProjectByIdResponseDto success(Project project, UserRole role){
         return new GetProjectByIdResponseDto(Collections.emptyList(),
-                project.getId(), DtoBuilder.buildFullProjectDto(project, role));
+                project.getId(), DtoBuilder.buildFullProjectDto(project, role, true));
     }
 
     public static GetProjectByIdResponseDto fail(Integer id, Error error){

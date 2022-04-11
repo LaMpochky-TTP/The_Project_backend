@@ -7,6 +7,7 @@ public class UserDto {
     private String username;
     private String email;
     private UserRole role;
+    private Boolean confirmed;
 
     public Integer getId() {
         return id;
@@ -38,5 +39,13 @@ public class UserDto {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public Boolean getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(Boolean confirmed) {
+        this.confirmed = confirmed;
     }
 }

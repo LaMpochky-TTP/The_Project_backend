@@ -20,7 +20,8 @@ public class ProjectResponseDto extends ResponseDto {
     }
 
     public static ProjectResponseDto success(Project project, UserRole role) {
-        return new ProjectResponseDto(Collections.emptyList(), DtoBuilder.buildShortProjectDto(project, role));
+        return new ProjectResponseDto(Collections.emptyList(),
+                DtoBuilder.buildShortProjectDto(project, role, true));
     }
 
     public static ProjectResponseDto fail(Error error){

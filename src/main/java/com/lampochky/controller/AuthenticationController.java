@@ -87,21 +87,4 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ResponseDto(Collections.singletonList(Error.AUTHENTICATION_FAIL)));
     }
-
-    // temporal endpoint for login testing only
-    // TODO remove this endpoint
-    @GetMapping("/login-test")
-    public ResponseEntity<UserDto> loginTest(@AuthenticationPrincipal UserSecurity userSecurity){
-        return ResponseEntity.ok(DtoBuilder.buildUserDto(userSecurity.getUser(), null));
-    }
-
-    @PostMapping("/test")
-    public ResponseEntity<UserDto> test(@AuthenticationPrincipal UserSecurity userSecurity,
-                                        @RequestBody ObjectNode node){
-        for (Iterator<String> it = node.fieldNames(); it.hasNext(); ) {
-            String field = it.next();
-            System.out.println(field + " = " + node.get(field));
-        }
-        return ResponseEntity.ok(DtoBuilder.buildUserDto(userSecurity.getUser(), null));
-    }
 }

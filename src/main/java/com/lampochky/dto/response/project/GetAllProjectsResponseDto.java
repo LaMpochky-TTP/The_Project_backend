@@ -18,8 +18,8 @@ public class GetAllProjectsResponseDto extends ResponseDto {
     }
 
     public static GetAllProjectsResponseDto success(List<UserProject> userProjects){
-        return new GetAllProjectsResponseDto(Collections.emptyList(),
-                userProjects.stream().map(up -> DtoBuilder.buildShortProjectDto(up.getProject(), up.getRole()))
+        return new GetAllProjectsResponseDto(Collections.emptyList(), userProjects.stream()
+                .map(up -> DtoBuilder.buildShortProjectDto(up.getProject(), up.getRole(), up.getConfirmed()))
                         .collect(Collectors.toList()));
     }
 

@@ -16,6 +16,7 @@ public class ProjectDto {
     private List<UserDto> users;
     private List<TagDto> tags;
     private UserRole role;
+    private Boolean confirmed;
 
     public Integer getId() {
         return id;
@@ -63,5 +64,13 @@ public class ProjectDto {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public Boolean getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(Boolean confirmed) {
+        this.confirmed = confirmed;
     }
 }
