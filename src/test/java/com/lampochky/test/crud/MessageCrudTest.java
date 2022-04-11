@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.lampochky.Application;
 import com.lampochky.database.entity.*;
 import com.lampochky.database.service.*;
-import com.lampochky.security.UserSecurity;
+import com.lampochky.config.security.UserSecurity;
 import com.lampochky.validation.Error;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;

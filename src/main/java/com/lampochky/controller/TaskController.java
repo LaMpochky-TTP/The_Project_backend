@@ -9,7 +9,7 @@ import com.lampochky.dto.request.task.TaskRequestDto;
 import com.lampochky.dto.response.task.GetTaskByIdResponseDto;
 import com.lampochky.dto.response.task.GetTaskByListResponseDto;
 import com.lampochky.dto.response.task.TaskResponseDto;
-import com.lampochky.security.UserSecurity;
+import com.lampochky.config.security.UserSecurity;
 import com.lampochky.validation.Error;
 import com.lampochky.validation.TaskValidator;
 import org.springframework.beans.factory.annotation.Autowired;

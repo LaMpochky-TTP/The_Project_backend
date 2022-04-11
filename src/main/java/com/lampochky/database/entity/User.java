@@ -27,7 +27,7 @@ public class User {
     @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "user")
     private List<Action> actions;
 
-    @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "assignedUser")
+    @OneToMany(mappedBy = "assignedUser")
     private List<Task> assignedTasks;
 
     @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "creator")

@@ -9,7 +9,7 @@ import com.lampochky.dto.request.list.UpdateListRequestDto;
 import com.lampochky.dto.response.list.ListResponseDto;
 import com.lampochky.dto.response.list.GetListByIdResponseDto;
 import com.lampochky.dto.response.list.GetListsInProjectResponseDto;
-import com.lampochky.security.UserSecurity;
+import com.lampochky.config.security.UserSecurity;
 import com.lampochky.validation.Error;
 import com.lampochky.validation.ListValidator;
 import org.springframework.beans.factory.annotation.Autowired;

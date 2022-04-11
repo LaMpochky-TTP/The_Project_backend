@@ -10,7 +10,7 @@ import com.lampochky.dto.request.tag.UpdateTagRequestDto;
 import com.lampochky.dto.response.tag.GetTagByIdResponseDto;
 import com.lampochky.dto.response.tag.GetTagsInProjectResponseDto;
 import com.lampochky.dto.response.tag.TagResponseDto;
-import com.lampochky.security.UserSecurity;
+import com.lampochky.config.security.UserSecurity;
 import com.lampochky.validation.Error;
 import com.lampochky.validation.TagValidator;
 import org.springframework.beans.factory.annotation.Autowired;

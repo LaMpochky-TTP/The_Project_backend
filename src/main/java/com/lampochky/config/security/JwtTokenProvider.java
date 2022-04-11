@@ -1,4 +1,4 @@
-package com.lampochky.security;
+package com.lampochky.config.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;

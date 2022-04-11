@@ -8,7 +8,7 @@ import com.lampochky.database.entity.TaskList;
 import com.lampochky.database.entity.User;
 import com.lampochky.database.entity.UserRole;
 import com.lampochky.database.service.*;
-import com.lampochky.security.UserSecurity;
+import com.lampochky.config.security.UserSecurity;
 import com.lampochky.validation.Error;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;

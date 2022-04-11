@@ -1,4 +1,4 @@
-package com.lampochky.security;
+package com.lampochky.config.security;
 
 import com.lampochky.database.entity.User;
 import org.springframework.security.core.GrantedAuthority;

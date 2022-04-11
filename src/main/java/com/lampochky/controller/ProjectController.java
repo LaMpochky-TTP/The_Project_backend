@@ -11,7 +11,7 @@ import com.lampochky.dto.request.project.InviteAnswerProjectRequestDto;
 import com.lampochky.dto.request.project.InviteProjectRequestDto;
 import com.lampochky.dto.request.project.ProjectRequestDto;
 import com.lampochky.dto.response.project.*;
-import com.lampochky.security.UserSecurity;
+import com.lampochky.config.security.UserSecurity;
 import com.lampochky.validation.Error;
 import com.lampochky.validation.ProjectValidator;
 import org.springframework.beans.factory.annotation.Autowired;

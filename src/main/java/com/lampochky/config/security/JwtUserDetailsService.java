@@ -1,4 +1,4 @@
-package com.lampochky.security;
+package com.lampochky.config.security;
 
 import com.lampochky.database.entity.User;
 import com.lampochky.database.service.UserService;

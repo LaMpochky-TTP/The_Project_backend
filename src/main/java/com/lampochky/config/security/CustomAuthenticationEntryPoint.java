@@ -1,4 +1,4 @@
-package com.lampochky.security;
+package com.lampochky.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lampochky.dto.response.ResponseDto;

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.lampochky.Application;
 import com.lampochky.database.entity.User;
 import com.lampochky.database.service.UserService;
-import com.lampochky.security.JwtTokenProvider;
+import com.lampochky.config.security.JwtTokenProvider;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

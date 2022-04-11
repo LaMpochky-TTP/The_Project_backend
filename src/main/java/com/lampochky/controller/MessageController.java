@@ -10,7 +10,7 @@ import com.lampochky.dto.request.message.UpdateMessageRequestDto;
 import com.lampochky.dto.response.message.GetMessageByIdResponseDto;
 import com.lampochky.dto.response.message.GetMessagesInTaskResponseDto;
 import com.lampochky.dto.response.message.MessageResponseDto;
-import com.lampochky.security.UserSecurity;
+import com.lampochky.config.security.UserSecurity;
 import com.lampochky.validation.Error;
 import com.lampochky.validation.MessageValidator;
 import org.springframework.http.HttpStatus;
