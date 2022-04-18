@@ -133,8 +133,6 @@ public class TaskController extends AbstractController{
             log.info("user {} attempts to create a task with assigned user {} with role {}",
                     user, task.getAssignedUser(), assignedRole);
         }
-        System.out.println(request);
-        System.out.println(request.getTagIds());
         task.setTags(new ArrayList<>());
         for(int tagId: request.getTagIds()) {
             Optional<Tag> optTag = tagService.findById(tagId);
