@@ -1,9 +1,6 @@
 package com.lampochky.controller;
 
-import com.lampochky.database.entity.Task;
-import com.lampochky.database.entity.TaskList;
-import com.lampochky.database.entity.User;
-import com.lampochky.database.entity.UserRole;
+import com.lampochky.database.entity.*;
 import com.lampochky.database.service.*;
 import com.lampochky.dto.request.task.TaskRequestDto;
 import com.lampochky.dto.response.task.GetTaskByIdResponseDto;
@@ -28,16 +25,18 @@ import java.util.Optional;
 public class TaskController extends AbstractController{
     private final UserService userService;
     private final TaskService taskService;
+    private final TagService tagService;
     private final ListService listService;
     private final ProjectService projectService;
     private final TaskValidator validator;
 
     @Autowired
-    public TaskController(UserProjectService userProjectService, UserService userService,
+    public TaskController(UserProjectService userProjectService, UserService userService, TagService tagService,
                           TaskService taskService, ListService listService, ProjectService projectService) {
         super(userProjectService);
         this.userService = userService;
         this.taskService = taskService;
+        this.tagService = tagService;
         this.listService = listService;
         this.projectService = projectService;
         validator = new TaskValidator(userService);
@@ -134,6 +133,18 @@ public class TaskController extends AbstractController{
             log.info("user {} attempts to create a task with assigned user {} with role {}",
                     user, task.getAssignedUser(), assignedRole);
         }
+        System.out.println(request);
+        System.out.println(request.getTagIds());
+        task.setTags(new ArrayList<>());
+        for(int tagId: request.getTagIds()) {
+            Optional<Tag> optTag = tagService.findById(tagId);
+            if(optTag.isPresent()) {
+                task.getTags().add(optTag.get());
+            } else {
+                log.info("user {} attempts to create a task with non-existing tag by id {}", user, tagId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(TaskResponseDto.fail(Error.TAG_NOT_FOUND));
+            }
+        }
         if(validator.validate(task)){
             Task savedTask = taskService.save(task);
             return ResponseEntity.ok(TaskResponseDto.success(savedTask));
@@ -188,6 +199,16 @@ public class TaskController extends AbstractController{
         if(task.getAssignedUser() != null && !assignedRole.greaterOrEquals(UserRole.DEVELOPER)) {
             log.info("user {} attempts to set user {} with role {} assigned to a task {}",
                     user, task.getAssignedUser(), assignedRole, task);
+        }
+        task.setTags(new ArrayList<>());
+        for(int tagId: request.getTagIds()) {
+            Optional<Tag> optTag = tagService.findById(tagId);
+            if(optTag.isPresent()) {
+                task.getTags().add(optTag.get());
+            } else {
+                log.info("user {} attempts to create a task with non-existing tag by id {}", user, tagId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(TaskResponseDto.fail(Error.TAG_NOT_FOUND));
+            }
         }
         if(validator.validate(task)){
             Task savedTask = taskService.save(task);

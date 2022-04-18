@@ -3,12 +3,12 @@ package com.lampochky.test.crud;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.lampochky.Application;
+import com.lampochky.config.security.UserSecurity;
 import com.lampochky.database.entity.Task;
 import com.lampochky.database.entity.TaskList;
 import com.lampochky.database.entity.User;
 import com.lampochky.database.entity.UserRole;
 import com.lampochky.database.service.*;
-import com.lampochky.config.security.UserSecurity;
 import com.lampochky.validation.Error;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -255,7 +255,7 @@ public class TaskCrudTest extends AbstractCrudTest {
     }
 
     protected static ObjectNode buildValidTaskRequest(ObjectMapper mapper){
-        return mapper.createObjectNode()
+        ObjectNode node = mapper.createObjectNode()
                 .put("name", "new_task")
                 .put("dateToStart", LocalDate.now().minusDays(1).format(dateFormat))
                 .put("dateToFinish", LocalDate.now().plusDays(15).format(dateFormat))
@@ -263,6 +263,8 @@ public class TaskCrudTest extends AbstractCrudTest {
                 .put("description", "new task description")
                 .put("listId", 1)
                 .putNull("assignedUserId");
+        node.putArray("tagIds");
+        return node;
     }
 
     public static Task buildTaskFromNode(ObjectNode request) {
