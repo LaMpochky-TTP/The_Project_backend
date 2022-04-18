@@ -21,7 +21,7 @@ public class GetTaskByListResponseDto extends ResponseDto {
 
     public static GetTaskByListResponseDto success(TaskList taskList){
         return new GetTaskByListResponseDto(Collections.emptyList(), taskList.getId(),
-                taskList.getTasks().stream().map(DtoBuilder::buildShortTaskDto).collect(Collectors.toList()));
+                taskList.getTasks().stream().map(DtoBuilder::buildFullTaskDto).collect(Collectors.toList()));
     }
 
     public static GetTaskByListResponseDto fail(Integer taskId, Error error){
