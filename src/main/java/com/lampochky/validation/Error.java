@@ -25,7 +25,7 @@ public enum Error {
     MESSAGE_TEXT_EMPTY("text must not be empty"),
     MESSAGE_TEXT_TOO_LONG("text must not be longer then 1000 characters"),
 
-    DATE_ORDER_INVALID("date to start must not be before date to finish"),
+    DATE_ORDER_INVALID("date to start must not be after date to finish"),
     ASSIGNING_NOT_GRANTED_USER("assigned user must have role " + UserRole.DEVELOPER.name() + " or higher"),
 
     NAME_EMPTY("name is empty"),
